@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Minisuper Teresita – Tu tienda de confianza con productos frescos, abarrotes y más al mejor precio en Pocosol, Santa Rosa.">
+  <meta name="theme-color" content="#2d6a4f">
+  <title>Minisuper Teresita – Frescura y sabor de barrio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="preload" href="img/Portada.jpeg" as="image" fetchpriority="high">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <div id="welcome-banner" class="welcome-banner" role="alert" aria-live="polite" aria-atomic="true">
+    <p>¡Bienvenida/o a Minisuper Teresita! 🛒 Revisá nuestras ofertas de hoy.</p>
+    <button id="close-banner" class="banner-close" aria-label="Cerrar mensaje de bienvenida">×</button>
+  </div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#inicio" class="logo" aria-label="Minisuper Teresita – página de inicio">
+        <span class="logo-icon" aria-hidden="true">🛒</span>
+        <span class="logo-text">Minisuper <strong>Teresita</strong></span>
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <ul class="nav-list">
+          <li><a href="#inicio"    class="nav-link">Inicio</a></li>
+          <li><a href="#productos" class="nav-link">Productos</a></li>
+          <li><a href="#servicios" class="nav-link">Servicios</a></li>
+          <li><a href="#galeria"   class="nav-link">Galería</a></li>
+          <li><a href="#contacto"  class="nav-link">Contacto</a></li>
+        </ul>
+      </nav>
+      <button id="theme-toggle" class="theme-toggle" aria-pressed="false" aria-label="Activar modo oscuro">
+        <span id="theme-icon" aria-hidden="true">🌙</span>
+      </button>
+      <button class="nav-toggle" id="nav-toggle"
+              aria-controls="main-nav"
+              aria-expanded="false"
+              aria-label="Abrir menú de navegación">
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <!-- HERO — imagen real de portada -->
+    <section id="inicio" class="hero" aria-labelledby="hero-titulo">
+      <img
+        class="hero-bg-img"
+        src="img/Portada.jpeg"
+        alt=""
+        aria-hidden="true"
+        width="1440" height="700"
+        fetchpriority="high">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <h1 id="hero-titulo" class="hero-title">
+            MiniSuper Teresita<br>
+            <em>Visitanos</em>
+          </h1>
+          <p class="hero-subtitle">
+            Productos frescos, abarrotes y ferretería
+            a precios justos, con la calidez de siempre.
+          </p>
+          <div class="hero-ctas">
+            <a href="#productos" class="btn btn-primary">Ver productos</a>
+            <a href="#contacto"  class="btn btn-hero-secondary">¿Cómo llegar?</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATEGORÍAS POPULARES -->
+    <section id="categorias" class="categorias-section" aria-labelledby="cat-titulo">
+      <div class="container">
+        <header class="section-header">
+          <h2 id="cat-titulo" class="section-title">Categorías populares</h2>
+          <p class="section-subtitle">Encontrá todo lo que buscás en un solo lugar</p>
+        </header>
+        <div class="categorias-grid">
+          <a href="#productos" class="cat-card" data-jump="bebidas" aria-label="Ir a Bebidas">
+            <div class="cat-img-wrap">
+              <img src="https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=600&q=80"
+                   alt="Variedad de bebidas frías y refrescos" width="600" height="400" loading="lazy">
+            </div>
+            <div class="cat-info">
+              <span class="cat-icon" aria-hidden="true">🥤</span>
+              <h3>Bebidas</h3>
+              <p>Refrescos, jugos y más</p>
+            </div>
+          </a>
+          <a href="#productos" class="cat-card" data-jump="snacks-y-dulceria" aria-label="Ir a Snacks y Dulcería">
+            <div class="cat-img-wrap">
+              <img src="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=600&q=80"
+                   alt="Snacks, galletas y dulces variados" width="600" height="400" loading="lazy">
+            </div>
+            <div class="cat-info">
+              <span class="cat-icon" aria-hidden="true">🍿</span>
+              <h3>Snacks</h3>
+              <p>Paquetes, galletas y dulcería</p>
+            </div>
+          </a>
+          <a href="#productos" class="cat-card" data-jump="abarrotes-y-despensa" aria-label="Ir a Abarrotes y Despensa">
+            <div class="cat-img-wrap">
+              <img src="https://images.unsplash.com/photo-1604719312566-8912e9c8a213?w=600&q=80"
+                   alt="Estantes con productos de abarrotes y despensa" width="600" height="400" loading="lazy">
+            </div>
+            <div class="cat-info">
+              <span class="cat-icon" aria-hidden="true">🛒</span>
+              <h3>Abarrotes</h3>
+              <p>Todo para tu despensa</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section id="productos" class="productos-section" aria-labelledby="productos-titulo">
+      <div class="container">
+        <header class="section-header">
+          <h2 id="productos-titulo" class="section-title">Nuestros Productos</h2>
+          <p class="section-subtitle">Encontrá todo lo que necesitás en un solo lugar</p>
+        </header>
+
+        <div class="productos-search-wrapper" role="search" aria-label="Buscar productos">
+          <label for="productos-search" class="sr-only">Buscar productos</label>
+          <div class="search-input-wrapper">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input
+              type="search"
+              id="productos-search"
+              class="productos-search-input"
+              placeholder="Buscar producto… ej: arroz, jabón, leche"
+              autocomplete="off"
+              aria-controls="search-results"
+              aria-label="Buscar producto por nombre">
+            <kbd class="search-esc-hint" aria-hidden="true">Esc para limpiar</kbd>
+          </div>
+        </div>
+
+        <div id="search-results" class="search-results" aria-live="polite" aria-atomic="false"></div>
+
+        <div id="catalogos-tabs" class="catalogos-tabs" role="tablist" aria-label="Categorías de productos"></div>
+        <div id="catalogos-content" class="catalogos-content" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section id="servicios" class="servicios-section" aria-labelledby="servicios-titulo">
+      <div class="container">
+        <header class="section-header">
+          <h2 id="servicios-titulo" class="section-title">Nuestros Servicios</h2>
+          <p class="section-subtitle">Pensados para tu comodidad y la de tu familia</p>
+        </header>
+        <div class="servicios-cards">
+          <div class="servicio-card">
+            <span class="servicio-card-icon" aria-hidden="true">💳</span>
+            <h3>SINPE Móvil</h3>
+            <p>Aceptamos SINPE, tarjeta y efectivo. Pagá rápido y seguro sin complicaciones.</p>
+          </div>
+          <div class="servicio-card">
+            <span class="servicio-card-icon" aria-hidden="true">📦</span>
+            <h3>Pedidos por encargo</h3>
+            <p>¿Necesitás algo especial? Consultanos y lo conseguimos para vos a buen precio.</p>
+          </div>
+          <div class="servicio-card">
+            <span class="servicio-card-icon" aria-hidden="true">♻️</span>
+            <h3>Programa verde</h3>
+            <p>Traé tu bolsa reutilizable y recibí un descuento. Apoyamos el consumo responsable.</p>
+          </div>
+          <div class="servicio-card">
+            <span class="servicio-card-icon" aria-hidden="true">🕐</span>
+            <h3>Horarios amplios</h3>
+            <p>Lun–Vie 7–8 pm · Sábado y Domingo 7–6 pm. Siempre cerca cuando nos necesitás.</p>
+          </div>
+          <div class="servicio-card">
+            <span class="servicio-card-icon" aria-hidden="true">📍</span>
+            <h3>Fácil de encontrar</h3>
+            <p>Tres Perlas de Pocosol, Santa Rosa — 3 km norte de la gasolinera. Ruta fácil en Google Maps.</p>
+          </div>
+          <div class="servicio-card">
+            <span class="servicio-card-icon" aria-hidden="true">💬</span>
+            <h3>Atención por WhatsApp</h3>
+            <p>Escribinos al <a href="https://wa.me/50671853249" target="_blank" rel="noopener">+506 7185-3249</a> para consultar disponibilidad de nuestros productos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERÍA -->
+    <section id="galeria" class="galeria-section" aria-labelledby="galeria-titulo">
+      <div class="container">
+        <header class="section-header">
+          <h2 id="galeria-titulo" class="section-title">Galería</h2>
+          <p class="section-subtitle">Momentos de nuestra tienda</p>
+        </header>
+        <div class="galeria-grid">
+          <figure class="galeria-item galeria-featured">
+            <img
+              src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
+              alt="Vista interior del minisuper con pasillos ordenados y estantes llenos de productos"
+              width="800" height="500" loading="lazy">
+            <figcaption>Nuestra tienda, siempre ordenada para vos</figcaption>
+          </figure>
+          <figure class="galeria-item">
+            <img
+              src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&q=80"
+              alt="Variedad colorida de frutas y verduras frescas en canastas"
+              width="400" height="300" loading="lazy">
+            <figcaption>Verduras frescas cada mañana</figcaption>
+          </figure>
+          <figure class="galeria-item">
+            <img
+              src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80"
+              alt="Tendero acomodando productos en estante de supermercado"
+              width="400" height="300" loading="lazy">
+            <figcaption>Atención personalizada siempre</figcaption>
+          </figure>
+          <figure class="galeria-item">
+            <img
+              src="https://images.unsplash.com/photo-1506617564039-2f3b650b7010?w=400&q=80"
+              alt="Canasta de mimbre con pan artesanal recién horneado"
+              width="400" height="300" loading="lazy">
+            <figcaption>Panadería artesanal diaria</figcaption>
+          </figure>
+          <figure class="galeria-item">
+            <img
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80"
+              alt="Cliente sonriente recibiendo su bolsa de compras"
+              width="400" height="300" loading="lazy">
+            <figcaption>Clientes satisfechos, nuestra recompensa</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTO -->
+    <section id="contacto" class="contacto-section" aria-labelledby="contacto-titulo">
+      <div class="container">
+        <div class="contacto-header">
+          <div>
+            <h2 id="contacto-titulo" class="section-title light">Visitanos</h2>
+            <p class="contacto-desc">
+              Estamos en el corazón del pueblo, esperándote con productos frescos
+              y la mejor atención de lunes a domingo.
+            </p>
+          </div>
+          <ul class="contacto-datos" style="display:none">
+            <li><span aria-hidden="true">📍</span> Tres Perlas de Pocosol, Santa Rosa, 3KM al norte de la gasolinera</li>
+            <li><span aria-hidden="true">📞</span> <a href="tel:+50671853249" class="contact-link-light">+506 7185-3249</a></li>
+            <li><span aria-hidden="true">✉️</span> <a href="mailto:minisuperteresitatresperlas@gmail.com" class="contact-link-light">minisuperteresitatresperlas@gmail.com</a></li>
+          </ul>
+        </div>
+        <div class="contacto-layout">
+
+          <!-- MAPA -->
+          <div class="mapa-wrapper">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1960.6980757800761!2d-84.534711!3d10.649384!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2scr!4v1780970089266!5m2!1ses-419!2scr"
+              width="100%" height="100%"
+              style="border:0; display:block; border-radius: 12px; min-height: 420px;"
+              allowfullscreen loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Mapa de ubicación de Minisuper Teresita en Tres Perlas de Pocosol, Santa Rosa, Alajuela, Costa Rica">
+            </iframe>
+          </div>
+
+          <!-- CONTACTO PANEL -->
+          <aside class="resenas-panel" aria-label="Información de contacto">
+            <p class="resenas-panel-title">
+              <span aria-hidden="true"></span> Contactanos:
+            </p>
+
+            <div class="contacto-panel-info">
+              <ul class="contacto-panel-lista">
+                <li>
+                  <span class="contacto-panel-icono" aria-hidden="true">📍</span>
+                  <span>Pocosol, Santa Rosa, 3KM al norte de la gasolinera</span>
+                </li>
+                <li>
+                  <span class="contacto-panel-icono" aria-hidden="true">📞</span>
+                  <a href="tel:+50671853249" class="contact-link-light">+506 7185-3249</a>
+                </li>
+                <li>
+                  <span class="contacto-panel-icono" aria-hidden="true">✉️</span>
+                  <a href="mailto: minisuperteresitatresperlas@gmail.com" class="contact-link-light">minisuperteresitatresperlas@gmail.com</a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+  </main>
+</main>
+
+  <footer class="site-footer" aria-label="Pie de página del sitio">
+    <div class="container footer-layout">
+      <div class="footer-brand">
+        <p class="footer-logo"><span aria-hidden="true">🛒</span> Minisuper Teresita</p>
+        <p class="footer-tagline">Frescura y sabor </p>
+      </div>
+      <nav class="footer-nav" aria-label="Navegación del pie de página">
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#productos">Productos</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+      <div class="footer-legal">
+        <small>&copy; <time datetime="2025">2025</time> Minisuper Teresita. Todos los derechos reservados.</small>
+        <small>HTML5 válido · CSS3 nativo · WCAG 2.1</small>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/scripts.js"></script>
+</body>
+</html>

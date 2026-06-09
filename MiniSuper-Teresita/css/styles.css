@@ -1,0 +1,1578 @@
+/* =====================================================================
+   MINISUPER TERESITA — styles.css
+   Estructura: Variables → Reset → Base → Componentes → Secciones
+               → Modo Oscuro → Media Queries (Breakpoints)
+   ===================================================================== */
+
+
+/* =====================================================================
+   1. CUSTOM PROPERTIES (Variables CSS)
+   DECISIÓN: Centralizar colores y tamaños en :root tiene 3 ventajas:
+   a) Mantenimiento: cambiar un color aquí lo actualiza en todo el sitio.
+   b) Modo Oscuro: redefinir variables en [data-theme="dark"] sin duplicar CSS.
+   c) Consistencia: elimina "magic numbers" dispersos en el código.
+   ===================================================================== */
+:root {
+  /* Paleta de color — modo claro */
+  --color-verde-oscuro: #1b4332;
+  --color-verde-medio:  #2d6a4f;
+  --color-verde-claro:  #40916c;
+  --color-verde-suave:  #d8f3dc;
+  --color-acento:       #f4845f;
+
+  /* Texto — todos superan ratio 4.5:1 sobre fondo blanco (WCAG AA)
+     #1a1a1a sobre #fff → ratio ~18:1 ✓
+     #4a4a4a sobre #fff → ratio ~8.5:1 ✓
+     #6b6b6b sobre #fff → ratio ~5:1 ✓                               */
+  --color-texto-principal:  #1a1a1a;
+  --color-texto-secundario: #4a4a4a;
+  --color-texto-suave:      #6b6b6b;
+
+  /* Fondos */
+  --bg-pagina:      #ffffff;
+  --bg-seccion-alt: #f7fdf9;
+  --bg-aside:       #eaf6ee;
+  --bg-header:      #2d6a4f;
+  --bg-footer:      #1b4332;
+
+  /* Bordes y radios */
+  --border-color:     #c8e6c9;
+  --border-radius-sm: 6px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 20px;
+
+  /* Tipografía */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Source Sans 3', 'Segoe UI', sans-serif;
+
+  /* Espaciado (escala de 8pt) */
+  --space-xs:  0.5rem;
+  --space-sm:  1rem;
+  --space-md:  1.5rem;
+  --space-lg:  2rem;
+  --space-xl:  3rem;
+  --space-2xl: 5rem;
+
+  /* Sombras */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,.10);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,.14);
+
+  /* Transiciones */
+  --transition-fast:   150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+
+/* =====================================================================
+   2. RESET MODERNO
+   box-sizing: border-box — el padding/border NO se suma al width declarado.
+   Es el comportamiento más predecible para layouts.
+   ===================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 112%; /* Ligeramente más grande que el estándar del sistema */
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-texto-principal);
+  background-color: var(--bg-pagina);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+input, button, textarea, select { font: inherit; }
+
+/* Respetar preferencia del usuario de reducir movimiento (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* =====================================================================
+   3. ACCESIBILIDAD — SKIP LINK
+   WCAG 2.4.1: permite a usuarios de teclado saltarse la nav repetitiva.
+   Visible SOLO al recibir foco con Tab. Se oculta visualmente con
+   transform (pero permanece en el DOM para lectores de pantalla).
+   ===================================================================== */
+.skip-link {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-200%);
+  background: var(--color-verde-oscuro);
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 9999;
+  transition: transform var(--transition-fast);
+}
+.skip-link:focus {
+  transform: translateX(-50%) translateY(0);
+}
+
+
+/* =====================================================================
+   4. ACCESIBILIDAD — ESTADO :focus-visible
+   WCAG 2.4.7: elementos interactivos DEBEN tener foco visible.
+
+   DIFERENCIA CLAVE:
+   :focus         → se activa con clic del ratón Y teclado (molesto visualmente)
+   :focus-visible → se activa SOLO con navegación por teclado (elegante)
+
+   El color de outline (#40916c) sobre fondo blanco supera el ratio
+   3:1 requerido para indicadores de foco (WCAG 2.4.11).
+   ===================================================================== */
+:focus-visible {
+  outline: 3px solid var(--color-verde-claro);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+
+/* =====================================================================
+   5. TIPOGRAFÍA
+   clamp(min, preferido, max): tipografía fluida que escala entre
+   el mínimo y máximo según el viewport, sin breakpoints adicionales.
+   ===================================================================== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  line-height: 1.2;
+  color: var(--color-verde-oscuro);
+}
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+
+a {
+  color: var(--color-verde-medio);
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+a:hover { color: var(--color-verde-claro); }
+
+
+/* =====================================================================
+   6. CONTENEDOR CENTRAL
+   max-width + margin:auto = contenido centrado con ancho máximo.
+   padding lateral evita que el contenido toque los bordes en móvil.
+   ===================================================================== */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-sm);
+}
+
+
+/* =====================================================================
+   7. BANNER DE BIENVENIDA (controlado por localStorage en scripts.js)
+   ===================================================================== */
+.welcome-banner {
+  background: var(--color-verde-suave);
+  border-bottom: 2px solid var(--color-verde-claro);
+  padding: var(--space-xs) var(--space-sm);
+  /* FLEXBOX: alinea texto y botón en una fila (1 dimensión) */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  font-size: 0.95rem;
+  color: var(--color-verde-oscuro);
+  font-weight: 600;
+}
+.welcome-banner.hidden { display: none; }
+
+.banner-close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: var(--color-verde-oscuro);
+  line-height: 1;
+  padding: 0 var(--space-xs);
+  border-radius: 50%;
+  transition: background-color var(--transition-fast);
+}
+.banner-close:hover { background-color: var(--color-verde-claro); color: #fff; }
+
+
+/* =====================================================================
+   8. HEADER Y NAVEGACIÓN
+   DECISIÓN FLEXBOX: La barra de navegación es un layout UNIDIMENSIONAL.
+   Todos los elementos van en una sola fila horizontal.
+   → justify-content: space-between separa logo, nav y botón.
+   → align-items: center los centra verticalmente sin calcular alturas.
+   ===================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--bg-header);
+  box-shadow: var(--shadow-md);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: #fff;
+  white-space: nowrap;
+}
+.logo strong { color: #a8e6cf; }
+.logo-icon { font-size: 1.8rem; }
+
+.nav-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  list-style: none;
+}
+
+.nav-link {
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: var(--space-xs);
+  border-radius: var(--border-radius-sm);
+  transition: color var(--transition-fast);
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0;
+  width: 0; height: 2px;
+  background: #a8e6cf;
+  transition: width var(--transition-normal);
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after { width: 100%; }
+.nav-link:hover { color: #fff; }
+.nav-link[aria-current="location"] { color: #fff; }
+.nav-link[aria-current="location"]::after { width: 100%; }
+
+.theme-toggle {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  flex-shrink: 0;
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.3); transform: rotate(20deg); }
+
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-xs);
+}
+.hamburger,
+.hamburger::before,
+.hamburger::after {
+  display: block;
+  width: 24px; height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+}
+.hamburger { position: relative; }
+.hamburger::before,
+.hamburger::after { content: ''; position: absolute; left: 0; }
+.hamburger::before { top: -7px; }
+.hamburger::after  { top:  7px; }
+.nav-toggle[aria-expanded="true"] .hamburger { background: transparent; }
+.nav-toggle[aria-expanded="true"] .hamburger::before { transform: rotate(45deg) translate(5px, 5px); }
+.nav-toggle[aria-expanded="true"] .hamburger::after  { transform: rotate(-45deg) translate(5px, -5px); }
+
+
+/* =====================================================================
+   9. HERO SECTION — Full-screen con foto real de fondo
+   DECISIÓN: imagen <img> con aria-hidden="true" en lugar de
+   background-image CSS porque permite fetchpriority y preload,
+   optimizando el LCP (Largest Contentful Paint).
+   La capa oscura la aplica ::before para mantener la legibilidad
+   del texto sin agregar elementos extra al DOM.
+   ===================================================================== */
+.hero {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: #0d1b12; /* Fallback mientras carga la imagen */
+}
+
+/* Gradiente oscuro: transparente arriba → verde muy oscuro abajo
+   Esto da legibilidad al texto sin tapar la fachada de la tienda */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.10) 0%,
+    rgba(0, 0, 0, 0.20) 40%,
+    rgba(13, 27, 18, 0.82) 75%,
+    rgba(13, 27, 18, 0.96) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Imagen que cubre todo el hero como fondo */
+.hero-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%; /* Muestra la fachada, no el suelo */
+  z-index: 0;
+}
+
+/* Contenido sobre la imagen */
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-lg);
+  display: block;
+}
+
+.hero-content {
+  max-width: 640px;
+}
+
+/* Badge / chip superior con efecto vidrio */
+.hero-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.35rem 1rem;
+  border-radius: 2rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.03em;
+}
+
+.hero-title {
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  color: #ffffff;
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+.hero-title em {
+  font-style: italic;
+  color: #74c69d;
+}
+
+.hero-subtitle {
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.88);
+  margin-bottom: 2rem;
+  max-width: 480px;
+  line-height: 1.7;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+}
+
+/* FLEXBOX en el grupo de botones CTA (1 dimensión, fila) */
+.hero-ctas {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+
+/* =====================================================================
+   10. BOTONES
+   ===================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+.btn:hover  { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.btn:active { transform: translateY(0); box-shadow: none; }
+
+.btn-primary { background-color: var(--color-verde-medio); color: #fff; border-color: var(--color-verde-medio); }
+.btn-primary:hover { background-color: var(--color-verde-oscuro); border-color: var(--color-verde-oscuro); color: #fff; }
+
+.btn-secondary { background-color: transparent; color: var(--color-verde-oscuro); border-color: var(--color-verde-medio); }
+.btn-secondary:hover { background-color: var(--color-verde-medio); color: #fff; }
+
+/* Botón secundario sobre imagen oscura (hero) — efecto vidrio */
+.btn-hero-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid rgba(255,255,255,0.45);
+  color: #fff;
+  transition: background 200ms ease, border-color 200ms ease, transform 150ms ease;
+  white-space: nowrap;
+}
+.btn-hero-secondary:hover {
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.75);
+  transform: translateY(-2px);
+  color: #fff;
+}
+.btn-hero-secondary:focus-visible {
+  outline: 3px solid #74c69d;
+  outline-offset: 3px;
+}
+
+.btn-form {
+  width: 100%;
+  background-color: #fff;
+  color: var(--color-verde-oscuro);
+  border-color: #fff;
+  font-size: 1rem;
+}
+.btn-form:hover { background-color: var(--color-verde-suave); color: var(--color-verde-oscuro); border-color: var(--color-verde-suave); }
+
+
+/* =====================================================================
+   11. SECCIÓN DE PRODUCTOS — Catálogo con tabs
+   DECISIÓN CSS GRID: galería bidimensional de tarjetas.
+   DECISIÓN FLEXBOX: barra de tabs (una dimensión horizontal).
+
+   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))
+   → auto-fill:          crea columnas hasta que no quepan más.
+   → minmax(280px, 1fr): columna de mínimo 280px, máximo 1 fracción.
+   → Efecto:             responsivo intrínseco, sin media queries extra.
+   ===================================================================== */
+.productos-section {
+  padding: var(--space-2xl) 0;
+  background-color: var(--bg-pagina);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+.section-title    { margin-bottom: var(--space-xs); color: var(--color-verde-oscuro); }
+.section-subtitle { color: var(--color-texto-suave); font-size: 1.05rem; }
+
+/* TABS DE CATEGORÍAS — Flexbox en una dimensión */
+.catalogos-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.catalogo-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid var(--color-verde-medio);
+  border-radius: 2rem;
+  color: var(--color-verde-medio);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.catalogo-tab:hover,
+.catalogo-tab--active {
+  background: var(--color-verde-medio);
+  color: #fff;
+}
+.catalogo-tab:focus-visible {
+  outline: 3px solid var(--color-verde-medio);
+  outline-offset: 2px;
+}
+
+/* Panel oculto */
+.catalogo-panel[hidden] { display: none; }
+
+/* GRID de tarjetas — CSS GRID bidimensional */
+.productos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-lg);
+  list-style: none;
+  padding: 0;
+}
+
+/* FLEXBOX dentro de cada tarjeta: columna vertical */
+.producto-card {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+.producto-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+.card-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+}
+.card-img-wrapper img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 400ms ease;
+}
+.producto-card:hover .card-img-wrapper img { transform: scale(1.05); }
+
+/* Placeholder cuando no hay imagen */
+.card-img-placeholder {
+  width: 100%; height: 100%;
+  background: #f0f4f2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-bottom: 2px dashed #a8c5b5;
+}
+.img-placeholder-icon { font-size: 2rem; opacity: 0.4; }
+.img-placeholder-text { font-size: 0.7rem; color: #7aaa94; font-family: monospace; }
+
+.card-body {
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.3rem;
+}
+
+/* Etiqueta de subcategoría */
+.card-subcat {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-verde-claro);
+}
+
+.card-title { font-size: 1rem; color: var(--color-verde-oscuro); }
+
+.card-price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+.price-amount { font-size: 1.2rem; font-weight: 700; color: var(--color-verde-medio); }
+.price-old    { font-size: 0.9rem; color: var(--color-texto-suave); text-decoration: line-through; }
+
+/* Mensaje de error al cargar el catálogo */
+.catalogo-error {
+  padding: 2rem;
+  text-align: center;
+  color: #c0392b;
+}
+
+
+/* =====================================================================
+   12. SECCIÓN SERVICIOS + ASIDE
+   DECISIÓN CSS GRID: 2 columnas (servicios 2/3 | aside 1/3).
+   ===================================================================== */
+.servicios-section {
+  padding: var(--space-2xl) 0;
+  background-color: var(--bg-seccion-alt);
+}
+
+.servicios-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+/* FLEXBOX en la lista de servicios: eje vertical */
+.servicios-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  list-style: none;
+  padding: 0;
+}
+
+.servicio-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  background: #fff;
+  padding: var(--space-md);
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--color-verde-medio);
+  box-shadow: var(--shadow-sm);
+  transition: border-left-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.servicio-item:hover { border-left-color: var(--color-acento); box-shadow: var(--shadow-md); }
+
+.servicio-icon { font-size: 2rem; flex-shrink: 0; }
+.servicio-item h3 { margin-bottom: 0.25rem; color: var(--color-verde-oscuro); }
+.servicio-item p  { font-size: 0.9rem; color: var(--color-texto-secundario); }
+
+.info-aside {
+  background: var(--bg-aside);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-lg);
+  position: sticky;
+  top: 90px;
+}
+
+.aside-title {
+  font-size: 1.3rem;
+  color: var(--color-verde-oscuro);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-xs);
+  border-bottom: 2px solid var(--color-verde-medio);
+}
+
+.aside-block { margin-bottom: var(--space-md); }
+.aside-block:last-child { margin-bottom: 0; }
+.aside-block h3 {
+  font-size: 0.95rem;
+  color: var(--color-verde-medio);
+  margin-bottom: var(--space-xs);
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.aside-block ul { list-style: none; }
+.aside-block li { font-size: 0.875rem; padding: 2px 0; color: var(--color-texto-secundario); }
+
+address { font-style: normal; font-size: 0.875rem; color: var(--color-texto-secundario); line-height: 1.6; }
+.contact-link { font-weight: 600; color: var(--color-verde-medio); }
+.whatsapp-link { color: #25D366; }
+
+
+/* =====================================================================
+   13. GALERÍA — CSS GRID CON TEMPLATE-AREAS
+   DECISIÓN: grid-template-areas nombra zonas en texto.
+   La imagen "featured" ocupa 2 columnas (span 2).
+   Esto NO se puede lograr fácilmente con Flexbox.
+   ===================================================================== */
+.galeria-section {
+  padding: var(--space-2xl) 0;
+  background-color: var(--bg-pagina);
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+  grid-template-areas:
+    "featured featured item2"
+    "item3    item4    item5";
+}
+
+.galeria-featured          { grid-area: featured; }
+.galeria-item:nth-child(2) { grid-area: item2; }
+.galeria-item:nth-child(3) { grid-area: item3; }
+.galeria-item:nth-child(4) { grid-area: item4; }
+.galeria-item:nth-child(5) { grid-area: item5; }
+
+.galeria-item {
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  aspect-ratio: 4/3;
+}
+.galeria-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 400ms ease;
+}
+.galeria-item:hover img { transform: scale(1.04); }
+
+figcaption {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  color: #fff;
+  padding: var(--space-sm) var(--space-sm) var(--space-xs);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transform: translateY(100%);
+  transition: transform var(--transition-normal);
+}
+.galeria-item:hover figcaption { transform: translateY(0); }
+
+
+/* =====================================================================
+   14. SECCIÓN CONTACTO — Mapa centrado
+   ===================================================================== */
+.contacto-section {
+  padding: var(--space-2xl) 0;
+  background: url('../img/carrito.jpeg') center center / cover no-repeat;
+  position: relative;
+  color: #fff;
+}
+
+.contacto-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 50, 20, 0.72);
+  z-index: 0;
+}
+
+.contacto-section > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.contacto-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.section-title.light { color: #fff; }
+
+.contacto-desc {
+  color: rgba(255,255,255,0.85);
+  margin: var(--space-sm) 0 0;
+  line-height: 1.7;
+  max-width: 480px;
+}
+
+.contacto-datos {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  min-width: 260px;
+}
+.contacto-datos li { display: flex; align-items: flex-start; gap: var(--space-xs); color: rgba(255,255,255,0.9); font-size: 0.95rem; }
+.contact-link-light { color: #a8e6cf; font-weight: 600; }
+
+/* Layout del mapa — centrado */
+.contacto-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+.mapa-wrapper {
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  min-height: 380px;
+  border: 3px solid rgba(255,255,255,0.2);
+}
+.mapa-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+  display: block;
+  border: 0;
+}
+
+
+/* =====================================================================
+   15. FOOTER
+   DECISIÓN CSS GRID: 3 columnas (brand | nav | legal).
+   ===================================================================== */
+.site-footer {
+  background-color: var(--bg-footer);
+  color: rgba(255,255,255,0.75);
+  padding: var(--space-xl) 0;
+}
+
+.footer-layout {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+.footer-brand { text-align: left; }
+.footer-logo    { font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 4px; }
+.footer-tagline { font-size: 0.8rem; }
+
+.footer-nav ul {
+  display: flex;
+  gap: var(--space-md);
+  list-style: none;
+  flex-wrap: wrap;
+}
+.footer-nav a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.875rem; }
+.footer-nav a:hover { color: #fff; }
+
+.footer-legal {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.footer-legal small { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+
+
+/* =====================================================================
+   16. MODO OSCURO — [data-theme="dark"]
+   DECISIÓN: data-theme en <html> permite que el USUARIO elija
+   manualmente su preferencia, guardada en localStorage.
+   Solo redefinimos variables → todo el CSS que usa var() se actualiza.
+   ===================================================================== */
+[data-theme="dark"] {
+  --bg-pagina:      #0d1b12;
+  --bg-seccion-alt: #132218;
+  --bg-aside:       #1a2e20;
+  --bg-header:      #132218;
+  --bg-footer:      #0a1510;
+  --bg-card:        #1a2e20;
+
+  --color-texto-principal:  #e8f5e9;
+  --color-texto-secundario: #b2dfdb;
+  --color-texto-suave:      #81c784;
+
+  --border-color:     #2e4a35;
+  --color-verde-suave:#1a2e20;
+
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,.4);
+}
+
+[data-theme="dark"] .producto-card,
+[data-theme="dark"] .servicio-item { background: var(--bg-card, #1a2e20); border-color: var(--border-color); }
+
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3 { color: #a8e6cf; }
+
+[data-theme="dark"] .info-aside { background: var(--bg-aside); border-color: var(--border-color); }
+[data-theme="dark"] .welcome-banner { background: #132218; border-color: var(--color-verde-claro); color: #a8e6cf; }
+[data-theme="dark"] .catalogo-tab { border-color: #40916c; color: #74c69d; }
+[data-theme="dark"] .catalogo-tab--active,
+[data-theme="dark"] .catalogo-tab:hover { background: #40916c; color: #fff; }
+[data-theme="dark"] .card-img-placeholder { background: #1a2e20; border-color: #2e4a35; }
+
+
+/* =====================================================================
+   17. MEDIA QUERIES — DISEÑO RESPONSIVO
+   BREAKPOINT 1: max-width: 900px → Tablets
+   BREAKPOINT 2: max-width: 600px → Smartphones
+
+   ¿Por qué estos breakpoints?
+   → 900px: los layouts de 2-3 columnas se vuelven demasiado angostos.
+   → 600px: resolución típica de smartphones en portrait (375-428px).
+   ===================================================================== */
+
+/* ──── BREAKPOINT 1: Tablets (≤ 900px) ──── */
+@media (max-width: 900px) {
+
+  .header-inner { padding: var(--space-sm); }
+
+  .main-nav {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    background: var(--color-verde-oscuro);
+    padding: var(--space-sm);
+    box-shadow: var(--shadow-md);
+    z-index: 99;
+  }
+  .main-nav.is-open { display: block; }
+
+  .nav-list   { flex-direction: column; gap: var(--space-xs); align-items: flex-start; }
+  .nav-toggle { display: flex; }
+
+  /* Hero: texto ocupa todo el ancho */
+  .hero { min-height: 80vh; }
+  .hero-content { max-width: 100%; }
+
+  /* Servicios: 1 columna */
+  .servicios-layout { grid-template-columns: 1fr; }
+  .info-aside { position: static; }
+
+  /* Galería: 2 columnas */
+  .galeria-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-areas:
+      "featured featured"
+      "item2    item3"
+      "item4    item5";
+  }
+
+  /* Contacto: header apilado */
+  .contacto-header { flex-direction: column; gap: var(--space-md); }
+  .mapa-wrapper,
+  .mapa-wrapper iframe { min-height: 280px; }
+
+  /* Footer: 1 columna centrada */
+  .footer-layout { grid-template-columns: 1fr; text-align: center; }
+  .footer-brand  { text-align: center; }
+  .footer-legal  { text-align: center; }
+  .footer-nav ul { justify-content: center; }
+}
+
+/* ──── BREAKPOINT 2: Smartphones (≤ 600px) ──── */
+@media (max-width: 600px) {
+
+  :root {
+    --space-xl:  2rem;
+    --space-2xl: 3rem;
+  }
+
+  .logo-text { font-size: 1.1rem; }
+
+  /* Hero */
+  .hero { min-height: 85vh; align-items: flex-end; }
+  .hero-bg-img { object-position: center center; }
+  .hero-title  { font-size: 2.4rem; }
+  .hero-ctas   { flex-direction: column; align-items: flex-start; }
+
+  /* Productos: 1 columna */
+  .productos-grid { grid-template-columns: 1fr; }
+
+  /* Tabs: scroll horizontal en móvil */
+  .catalogos-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .catalogo-tab { flex-shrink: 0; }
+
+  /* Galería: 1 columna */
+  .galeria-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "featured"
+      "item2"
+      "item3"
+      "item4"
+      "item5";
+  }
+
+  .btn { padding: 0.65rem 1.25rem; font-size: 0.875rem; }
+
+  .mapa-wrapper, .mapa-wrapper iframe { min-height: 240px; }
+}
+
+
+/* =====================================================================
+   18. CARRUSEL HORIZONTAL DE PRODUCTOS
+   =====================================================================
+   DECISIÓN overflow-x: auto + scroll-snap-type:
+   → El track se puede deslizar horizontalmente sin JS adicional.
+   → scroll-snap-type: x mandatory + scroll-snap-align: start
+     hacen que cada tarjeta "encaje" al parar el scroll (UX fluida).
+   → Los botones prev/next usan scrollBy() en JS para accesibilidad.
+
+   LAZY LOAD ON HOVER:
+   → .card-img-hover-pending muestra un hint visual "hover para ver".
+   → Al primer mouseenter el JS inyecta el <img> real.
+   → Esto evita descargar decenas de imágenes que el usuario no ve.
+   ===================================================================== */
+
+/* Contenedor relativo para posicionar los botones de scroll */
+.carrusel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Track horizontal — scroll con snap */
+.carrusel-track {
+  display: flex;                     /* FLEXBOX — fila horizontal */
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;    /* Snap al parar el scroll */
+  scroll-behavior: smooth;
+  padding: 0.5rem 0.25rem 1.25rem;  /* Bottom padding para la scrollbar */
+  list-style: none;
+  flex: 1;
+  /* Ocultar scrollbar visualmente pero mantenerla funcional */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-verde-claro) transparent;
+}
+.carrusel-track::-webkit-scrollbar { height: 4px; }
+.carrusel-track::-webkit-scrollbar-thumb {
+  background: var(--color-verde-claro);
+  border-radius: 2px;
+}
+
+/* Cada ítem del carrusel — ancho fijo para que se vea el siguiente */
+.carrusel-item {
+  flex: 0 0 260px;                  /* No encoger, no crecer, 260px fijo */
+  scroll-snap-align: start;
+}
+
+/* Botones de scroll prev/next */
+.carrusel-btn {
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--color-verde-medio);
+  background: #fff;
+  color: var(--color-verde-medio);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  z-index: 2;
+}
+.carrusel-btn:hover {
+  background: var(--color-verde-medio);
+  color: #fff;
+}
+.carrusel-btn:focus-visible {
+  outline: 3px solid var(--color-verde-claro);
+  outline-offset: 2px;
+}
+
+/* ── LAZY HOVER — estado inicial de la imagen ── */
+.card-img-hover-pending {
+  background: #f0f4f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  border-bottom: 2px dashed #a8c5b5;
+  transition: background var(--transition-normal);
+  cursor: pointer;
+}
+.card-img-hover-pending:hover {
+  background: #e2f0e8;
+}
+
+/* Hint de hover */
+.hover-hint {
+  font-size: 0.78rem;
+  color: #7aaa94;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Imagen ya cargada — transición de entrada */
+.card-img-loaded {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  animation: fadeIn 300ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(1.03); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Modo oscuro para el carrusel */
+[data-theme="dark"] .carrusel-btn {
+  background: #1a2e20;
+  border-color: #40916c;
+  color: #74c69d;
+}
+[data-theme="dark"] .carrusel-btn:hover {
+  background: #40916c;
+  color: #fff;
+}
+[data-theme="dark"] .card-img-hover-pending {
+  background: #1a2e20;
+  border-color: #2e4a35;
+}
+[data-theme="dark"] .hover-hint { color: #52b788; }
+
+/* Responsive: en móvil los ítems son algo más angostos */
+@media (max-width: 600px) {
+  .carrusel-item   { flex: 0 0 200px; }
+  .carrusel-btn    { width: 32px; height: 32px; font-size: 1.1rem; }
+}
+
+
+/* =====================================================================
+   19. BUSCADOR DE PRODUCTOS
+   =====================================================================
+   .sr-only: clase estándar para texto visible solo a lectores de pantalla.
+   Técnica: posición fuera de pantalla sin display:none (que lo oculta
+   a lectores también). WCAG 1.3.1 — la etiqueta <label> debe existir.
+   ===================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Contenedor del buscador */
+.productos-search-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+/* Input con ícono a la izquierda — FLEXBOX */
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  border: 2px solid var(--color-verde-medio);
+  border-radius: 2rem;
+  padding: 0.6rem 1.25rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.search-input-wrapper:focus-within {
+  border-color: var(--color-verde-claro);
+  box-shadow: 0 0 0 3px rgba(64,145,108,0.15);
+}
+
+.search-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+.productos-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--color-texto-principal);
+  outline: none;
+}
+.productos-search-input::placeholder { color: var(--color-texto-suave); }
+/* Quitar el botón × nativo del type=search en WebKit */
+.productos-search-input::-webkit-search-cancel-button { display: none; }
+
+.search-esc-hint {
+  font-size: 0.7rem;
+  color: var(--color-texto-suave);
+  background: var(--bg-seccion-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 1px 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Contenedor de resultados */
+.search-results {
+  margin-bottom: 1.5rem;
+}
+
+/* Título de grupo (exactos / similares) */
+.search-group-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-verde-oscuro);
+  margin: 1.25rem 0 0.75rem;
+  padding-left: 0.25rem;
+  border-left: 3px solid var(--color-verde-medio);
+  padding-left: 0.6rem;
+}
+
+/* Sin resultados */
+.search-empty {
+  color: var(--color-texto-suave);
+  font-size: 0.95rem;
+  padding: 1.5rem 0;
+}
+
+/* Etiqueta de categoría dentro de la tarjeta (solo en resultados búsqueda) */
+.card-cat-label {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: var(--color-verde-medio);
+  border-radius: 50px;
+  padding: 2px 8px;
+  margin-bottom: 0.15rem;
+}
+
+/* Modo oscuro */
+[data-theme="dark"] .search-input-wrapper {
+  background: #1a2e20;
+  border-color: #40916c;
+}
+[data-theme="dark"] .productos-search-input { color: #e8f5e9; }
+[data-theme="dark"] .search-esc-hint {
+  background: #132218;
+  border-color: #2e4a35;
+  color: #81c784;
+}
+[data-theme="dark"] .search-group-title { color: #a8e6cf; }
+[data-theme="dark"] .card-cat-label { background: #40916c; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .search-esc-hint { display: none; }
+}
+/* =====================================================================
+   CATEGORÍAS POPULARES
+   ===================================================================== */
+.categorias-section {
+  padding: var(--space-2xl) 0;
+  background: var(--bg-pagina);
+}
+
+.categorias-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+@media (max-width: 768px) {
+  .categorias-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cat-card {
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-color);
+}
+
+.cat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.cat-img-wrap {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.cat-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.cat-card:hover .cat-img-wrap img {
+  transform: scale(1.05);
+}
+
+.cat-info {
+  padding: var(--space-md);
+  background: var(--bg-seccion-alt);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cat-icon {
+  font-size: 1.5rem;
+}
+
+.cat-info h3 {
+  font-size: 1.15rem;
+  color: var(--color-verde-oscuro);
+  margin: 0;
+}
+
+.cat-info p {
+  font-size: 0.9rem;
+  color: var(--color-texto-suave);
+  margin: 0;
+}
+
+/* =====================================================================
+   SERVICIOS — tarjetas tipo grid
+   ===================================================================== */
+.servicios-section {
+  padding: var(--space-2xl) 0;
+  background: var(--bg-seccion-alt);
+}
+
+.servicios-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+@media (max-width: 900px) {
+  .servicios-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .servicios-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.servicio-card {
+  background: var(--bg-pagina);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.servicio-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.servicio-card-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+.servicio-card h3 {
+  font-size: 1.1rem;
+  color: var(--color-verde-oscuro);
+  margin: 0;
+}
+
+.servicio-card p {
+  font-size: 0.95rem;
+  color: var(--color-texto-secundario);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.servicio-card p a {
+  color: var(--color-verde-medio);
+}
+
+/* Modo oscuro para las nuevas secciones */
+[data-theme="dark"] .cat-card {
+  border-color: #2a4a3a;
+}
+[data-theme="dark"] .cat-info {
+  background: #1e3a2e;
+}
+[data-theme="dark"] .servicio-card {
+  background: #1e3a2e;
+  border-color: #2a4a3a;
+}
+
+/* =====================================================================
+   FIX MODO OSCURO — servicio-card, cat-card, secciones globales
+   ===================================================================== */
+
+/* Headings en tarjetas de servicio y categoría (modo oscuro) */
+[data-theme="dark"] .servicio-card,
+[data-theme="dark"] .cat-card {
+  background: var(--bg-card, #1a2e20);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .servicio-card h3,
+[data-theme="dark"] .cat-info h3 {
+  color: #a8e6cf;
+}
+
+[data-theme="dark"] .servicio-card p,
+[data-theme="dark"] .cat-info p {
+  color: #b2dfdb;
+}
+
+[data-theme="dark"] .servicio-card-icon {
+  filter: drop-shadow(0 0 4px rgba(168,230,207,0.3));
+}
+
+/* Section titles y subtitles en modo oscuro */
+[data-theme="dark"] .section-title {
+  color: #a8e6cf;
+}
+
+[data-theme="dark"] .section-subtitle {
+  color: #81c784;
+}
+
+/* Hero badge modo oscuro */
+[data-theme="dark"] .hero-badge {
+  background: rgba(168,230,207,0.15);
+  color: #a8e6cf;
+  border-color: rgba(168,230,207,0.3);
+}
+
+/* Galería modo oscuro */
+[data-theme="dark"] .galeria-item figcaption {
+  color: #b2dfdb;
+}
+
+/* Producto cards modo oscuro */
+[data-theme="dark"] .producto-card {
+  background: var(--bg-card, #1a2e20);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .card-title  { color: #e8f5e9; }
+[data-theme="dark"] .card-subcat { color: #81c784; }
+[data-theme="dark"] .price-amount { color: #a8e6cf; }
+
+/* Catalogo tabs */
+[data-theme="dark"] .catalogos-tabs {
+  border-bottom-color: #2e4a35;
+}
+
+/* Carrusel botones modo oscuro */
+[data-theme="dark"] .carrusel-btn {
+  background: #1a2e20;
+  color: #a8e6cf;
+  border-color: #2e4a35;
+}
+[data-theme="dark"] .carrusel-btn:hover {
+  background: #40916c;
+  color: #fff;
+}
+
+/* =====================================================================
+   CONTACTO — nuevo layout dos columnas (mapa + reseñas)
+   ===================================================================== */
+.contacto-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .contacto-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Cabecera — fondo definido arriba con carrito.jpeg */
+
+/* =====================================================================
+   PANEL DE CONTACTO — tarjetas de la info de contacto
+   ===================================================================== */
+
+/* Panel de contacto */
+.contacto-panel-info {
+  background: rgba(255,255,255,0.1);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-md) var(--space-lg);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.contacto-panel-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.contacto-panel-lista li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 1rem;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.5;
+}
+
+.contacto-panel-icono {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
