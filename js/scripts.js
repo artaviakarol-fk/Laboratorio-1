@@ -73,17 +73,17 @@
   if (!tabsContainer || !contentContainer) return;
 
   var ICONOS = {
-    'Abarrotes y Despensa':       '🛒',
-    'Lácteos y Refrigerados':     '🥛',
-    'Carnes y Embutidos':         '🥩',
-    'Frutas y Verduras':          '🥦',
-    'Bebidas':                    '🥤',
-    'Snacks y Dulcería':          '🍫',
-    'Panadería':                  '🍞',
-    'Higiene y Farmacia':         '🧴',
-    'Limpieza del Hogar':         '🧹',
-    'Ferretería y Hogar':         '🔧',
-    'Alimentos para Mascotas':    '🐾',
+    'Abarrotes y Despensa':       '',
+    'Lácteos y Refrigerados':     '',
+    'Carnes y Embutidos':         '',
+    'Frutas y Verduras':          '',
+    'Bebidas':                    '',
+    'Snacks y Dulcería':          '',
+    'Panadería':                  '',
+    'Higiene y Farmacia':         '',
+    'Limpieza del Hogar':         '',
+    'Ferretería y Hogar':         '',
+    'Alimentos para Mascotas':    '',
   };
 
   var todosLosProductos = [];
@@ -307,7 +307,7 @@
     });
 
     var categorias = Object.keys(data).sort().map(function (nombre) {
-      return { id: toId(nombre), nombre: nombre, icono: ICONOS[nombre] || '📦', productos: data[nombre] };
+      return { id: toId(nombre), nombre: nombre, icono: ICONOS[nombre] || '', productos: data[nombre] };
     });
 
     if (!categorias.length) return;
