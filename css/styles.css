@@ -187,7 +187,7 @@ a:hover { color: var(--color-verde-claro); }
   color: #fff;
   white-space: nowrap;
 }
-.logo strong { color: #ffd699; }
+.logo strong { color: var(--color-naranja); }
 .logo-icon { font-size: 1.8rem; }
 
 .nav-list { display: flex; align-items: center; gap: var(--space-md); list-style: none; }
@@ -336,8 +336,11 @@ a:hover { color: var(--color-verde-claro); }
 .btn:hover  { transform: translateY(-2px); box-shadow: var(--shadow-md); }
 .btn:active { transform: translateY(0); box-shadow: none; }
 
-.btn-primary { background-color: var(--color-naranja); color: var(--color-texto-principal); border-color: var(--color-naranja); font-weight: 700; }
-.btn-primary:hover { background-color: var(--color-naranja-oscuro); border-color: var(--color-naranja-oscuro); color: var(--color-texto-principal); }
+.btn-primary { background-color: var(--color-naranja); color: #fff; border-color: var(--color-naranja); }
+.btn-primary:hover { background-color: var(--color-naranja-oscuro); border-color: var(--color-naranja-oscuro); color: #fff; }
+
+.btn-secondary { background-color: transparent; color: var(--color-verde-oscuro); border-color: var(--color-verde-medio); }
+.btn-secondary:hover { background-color: var(--color-verde-medio); color: #fff; }
 
 .btn-hero-secondary {
   display: inline-flex;
@@ -486,7 +489,7 @@ a:hover { color: var(--color-verde-claro); }
   display: inline-block;
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--color-texto-principal);
+  color: #fff;
   background: var(--color-naranja);
   padding: 0.25rem 0.75rem;
   border-radius: var(--border-radius-sm);
@@ -545,9 +548,9 @@ a:hover { color: var(--color-verde-claro); }
 .servicio-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(244,132,95,0.5); }
 
 .servicio-card-icon { font-size: 2rem; display: block; margin-bottom: var(--space-xs); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
-.servicio-card h3   { font-size: 1.1rem; color: var(--color-texto-principal); margin: 0; }
-.servicio-card p    { font-size: 0.95rem; color: #2b1400; margin: 0; line-height: 1.5; }
-.servicio-card p a  { color: var(--color-texto-principal); font-weight: 700; text-decoration: underline; }
+.servicio-card h3   { font-size: 1.1rem; color: #fff; margin: 0; text-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.servicio-card p    { font-size: 0.95rem; color: rgba(255,255,255,0.92); margin: 0; line-height: 1.5; }
+.servicio-card p a  { color: #fff; font-weight: 700; text-decoration: underline; }
 
 
 /* =====================================================================
@@ -676,7 +679,7 @@ a:hover { color: var(--color-verde-claro); }
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   background: var(--color-naranja);
-  color: var(--color-texto-principal);
+  color: #fff;
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.02em;
@@ -713,6 +716,15 @@ a:hover { color: var(--color-verde-claro); }
    16. CARRUSEL
    ===================================================================== */
 .carrusel-wrapper { position: relative; display: flex; align-items: center; gap: 0.5rem; }
+.carrusel-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 40px;
+  width: 28px; height: 100%;
+  background: linear-gradient(to right, transparent, var(--bg-pagina));
+  pointer-events: none;
+  z-index: 1;
+}
 
 .carrusel-track {
   display: flex;
@@ -852,6 +864,10 @@ a:hover { color: var(--color-verde-claro); }
 
 /* Tarjetas de servicio mantienen naranja en modo oscuro */
 [data-theme="dark"] .servicio-card    { background: linear-gradient(135deg, var(--color-naranja) 0%, var(--color-naranja-oscuro) 100%); }
+[data-theme="dark"] .servicio-card h3 { color: #fff; }
+[data-theme="dark"] .servicio-card p  { color: rgba(255,255,255,0.9); }
+
+[data-theme="dark"] .galeria-item figcaption { color: #b2dfdb; }
 
 [data-theme="dark"] .search-input-wrapper   { background: #1a2e20; border-color: #40916c; }
 [data-theme="dark"] .productos-search-input { color: #e8f5e9; }
@@ -951,4 +967,7 @@ a:hover { color: var(--color-verde-claro); }
   .logo-text { font-size: 1rem; }
   .logo-icon { font-size: 1.4rem; }
   .container { padding: 0 var(--space-xs); }
+
+  .carrusel-item { flex: 0 0 78vw; }
+  .carrusel-wrapper::after { right: 34px; width: 22px; }
 }
