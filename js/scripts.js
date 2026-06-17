@@ -151,26 +151,23 @@
   function attachLazyHover(card, imagenSrc, nombre) {
     var wrapper = card.querySelector('.card-img-wrapper');
     if (!wrapper) return;
-    function loadImg() {
-      wrapper.innerHTML = '';
-      if (imagenSrc) {
-        var img       = document.createElement('img');
-        img.alt       = nombre;
-        img.width     = 400;
-        img.height    = 300;
-        img.src       = imagenSrc;
-        img.className = 'card-img-loaded';
-        wrapper.appendChild(img);
-      } else {
-        wrapper.innerHTML =
-          '<div class="card-img-placeholder">'
-          + '<span class="img-placeholder-icon" aria-hidden="true">📷</span>'
-          + '<span class="img-placeholder-text">Sin imagen</span>'
-          + '</div>';
-      }
-      card.removeEventListener('mouseenter', loadImg);
+    wrapper.innerHTML = '';
+    if (imagenSrc) {
+      var img       = document.createElement('img');
+      img.alt       = nombre;
+      img.width     = 400;
+      img.height    = 300;
+      img.src       = imagenSrc;
+      img.className = 'card-img-loaded';
+      img.loading   = 'lazy';
+      wrapper.appendChild(img);
+    } else {
+      wrapper.innerHTML =
+        '<div class="card-img-placeholder">'
+        + '<span class="img-placeholder-icon" aria-hidden="true">📷</span>'
+        + '<span class="img-placeholder-text">Sin imagen</span>'
+        + '</div>';
     }
-    card.addEventListener('mouseenter', loadImg);
   }
 
   function crearTarjeta(producto, catLabel) {
@@ -181,7 +178,6 @@
     article.setAttribute('aria-label', 'Producto: ' + producto.nombre);
     article.innerHTML =
       '<div class="card-img-wrapper card-img-hover-pending">'
-      + '<span class="hover-hint" aria-hidden="true">🖱️ Hover para ver</span>'
       + '</div>'
       + '<div class="card-body">'
       + (catLabel ? '<span class="card-cat-label">' + catLabel + '</span>' : '')
@@ -455,4 +451,45 @@
       }, 300);
     });
   });
+})();
+/* =====================================================================
+   CARRUSEL DE GALERÍA
+   ===================================================================== */
+(function() {
+  var track = document.getElementById('carruselTrack');
+  var prevBtn = document.getElementById('carruselPrev');
+  var nextBtn = document.getElementById('carruselNext');
+  var dotsWrapper = document.getElementById('carruselIndicadores');
+  if (!track) return;
+
+  var slides = track.querySelectorAll('.galeria-carrusel-slide');
+  var total = slides.length;
+  var current = 0;
+  var autoTimer;
+
+  // Crear puntos indicadores
+  slides.forEach(function(_, i) {
+    var dot = document.createElement('button');
+    dot.className = 'galeria-carrusel-dot' + (i === 0 ? ' activo' : '');
+    dot.setAttribute('aria-label', 'Ir a imagen ' + (i + 1));
+    dot.addEventListener('click', function() { goTo(i); });
+    dotsWrapper.appendChild(dot);
+  });
+
+  function goTo(index) {
+    current = (index + total) % total;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dotsWrapper.querySelectorAll('.galeria-carrusel-dot').forEach(function(d, i) {
+      d.classList.toggle('activo', i === current);
+    });
+  }
+
+  prevBtn.addEventListener('click', function() { goTo(current - 1); resetAuto(); });
+  nextBtn.addEventListener('click', function() { goTo(current + 1); resetAuto(); });
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function() { goTo(current + 1); }, 4000);
+  }
+  resetAuto();
 })();

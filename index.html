@@ -203,42 +203,41 @@
           <h2 id="galeria-titulo" class="section-title">Galería</h2>
           <p class="section-subtitle">Momentos de nuestra tienda</p>
         </header>
-        <div class="galeria-grid">
-          <figure class="galeria-item galeria-featured">
-            <img
-              src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"
-              alt="Vista interior del minisuper con pasillos ordenados y estantes llenos de productos"
-              width="800" height="500" loading="lazy">
-            <figcaption>Nuestra tienda, siempre ordenada para vos</figcaption>
-          </figure>
-          <figure class="galeria-item">
-            <img
-              src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=400&q=80"
-              alt="Variedad colorida de frutas y verduras frescas en canastas"
-              width="400" height="300" loading="lazy">
-            <figcaption>Verduras frescas cada mañana</figcaption>
-          </figure>
-          <figure class="galeria-item">
-            <img
-              src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80"
-              alt="Tendero acomodando productos en estante de supermercado"
-              width="400" height="300" loading="lazy">
-            <figcaption>Atención personalizada siempre</figcaption>
-          </figure>
-          <figure class="galeria-item">
-            <img
-              src="https://images.unsplash.com/photo-1506617564039-2f3b650b7010?w=400&q=80"
-              alt="Canasta de mimbre con pan artesanal recién horneado"
-              width="400" height="300" loading="lazy">
-            <figcaption>Panadería artesanal diaria</figcaption>
-          </figure>
-          <figure class="galeria-item">
-            <img
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80"
-              alt="Cliente sonriente recibiendo su bolsa de compras"
-              width="400" height="300" loading="lazy">
-            <figcaption>Clientes satisfechos, nuestra recompensa</figcaption>
-          </figure>
+        <div class="galeria-carrusel-wrapper">
+          <div class="galeria-carrusel" id="galeriaCarrusel" aria-label="Carrusel de galería">
+            <div class="galeria-carrusel-track" id="carruselTrack">
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen1.png" alt="Galería imagen 1" loading="lazy">
+              </figure>
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen2.png" alt="Galería imagen 2" loading="lazy">
+              </figure>
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen3.png" alt="Galería imagen 3" loading="lazy">
+              </figure>
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen4.png" alt="Galería imagen 4" loading="lazy">
+              </figure>
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen5.png" alt="Galería imagen 5" loading="lazy">
+              </figure>
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen6.png" alt="Galería imagen 6" loading="lazy">
+              </figure>
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen7.png" alt="Galería imagen 7" loading="lazy">
+              </figure>
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen8.png" alt="Galería imagen 8" loading="lazy">
+              </figure>
+              <figure class="galeria-carrusel-slide">
+                <img src="img/Galeria/imagen9.png" alt="Galería imagen 9" loading="lazy">
+              </figure>
+            </div>
+          </div>
+          <button class="galeria-carrusel-btn galeria-carrusel-btn--prev" id="carruselPrev" aria-label="Imagen anterior">&#8249;</button>
+          <button class="galeria-carrusel-btn galeria-carrusel-btn--next" id="carruselNext" aria-label="Imagen siguiente">&#8250;</button>
+          <div class="galeria-carrusel-indicadores" id="carruselIndicadores" aria-label="Indicadores de diapositiva"></div>
         </div>
       </div>
     </section>
@@ -254,11 +253,6 @@
               y la mejor atención de lunes a domingo.
             </p>
           </div>
-          <ul class="contacto-datos" style="display:none">
-            <li><span aria-hidden="true">📍</span> Tres Perlas de Pocosol, Santa Rosa, 3KM al norte de la gasolinera</li>
-            <li><span aria-hidden="true">📞</span> <a href="tel:+50671853249" class="contact-link-light">+506 7185-3249</a></li>
-            <li><span aria-hidden="true">✉️</span> <a href="mailto:minisuperteresitatresperlas@gmail.com" class="contact-link-light">minisuperteresitatresperlas@gmail.com</a></li>
-          </ul>
         </div>
         <div class="contacto-layout">
 
@@ -295,7 +289,7 @@
                 </li>
                 <li>
                   <span class="contacto-panel-icono" aria-hidden="true">✉️</span>
-                  <a href="mailto: minisuperteresitatresperlas@gmail.com" class="contact-link-light">minisuperteresitatresperlas@gmail.com</a>
+                  <a href="mailto:minisuperteresitatresperlas@gmail.com" class="contact-link-light">minisuperteresitatresperlas@gmail.com</a>
                 </li>
               </ul>
             </div>
@@ -305,7 +299,6 @@
       </div>
     </section>
   </main>
-</main>
 
   <footer class="site-footer" aria-label="Pie de página del sitio">
     <div class="container footer-layout">
