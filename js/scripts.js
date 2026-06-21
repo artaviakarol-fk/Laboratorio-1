@@ -4,21 +4,22 @@
    1. MODO OSCURO / CLARO
    ===================================================================== */
 (function initTheme() {
-  var btn  = document.getElementById('theme-toggle');
-  var icon = document.getElementById('theme-icon');
+  var btn   = document.getElementById('theme-toggle');
+  var icon  = document.getElementById('theme-icon');
+  var label = document.getElementById('theme-label');
   if (!btn) return;
 
   function applyTheme(isDark) {
     if (isDark) {
       document.documentElement.setAttribute('data-theme', 'dark');
-      icon.textContent = '☀️';
+      icon.textContent  = '☀️';
+      label.textContent = 'Activar modo claro';
       btn.setAttribute('aria-pressed', 'true');
-      btn.setAttribute('aria-label', 'Activar modo claro');
     } else {
       document.documentElement.removeAttribute('data-theme');
-      icon.textContent = '🌙';
+      icon.textContent  = '🌙';
+      label.textContent = 'Activar modo oscuro';
       btn.setAttribute('aria-pressed', 'false');
-      btn.setAttribute('aria-label', 'Activar modo oscuro');
     }
   }
 
@@ -30,6 +31,72 @@
     var nowDark = document.documentElement.getAttribute('data-theme') !== 'dark';
     applyTheme(nowDark);
     localStorage.setItem('teresita-theme', nowDark ? 'dark' : 'light');
+  });
+})();
+
+
+/* =====================================================================
+   1B. TAMAÑO DE TEXTO — A- / A / A+
+   ===================================================================== */
+(function initTamanoTexto() {
+  var botones = document.querySelectorAll('.texto-size-btn');
+  if (!botones.length) return;
+
+  function aplicarTamano(size) {
+    if (size === 'md') {
+      document.documentElement.removeAttribute('data-text-size');
+    } else {
+      document.documentElement.setAttribute('data-text-size', size);
+    }
+    botones.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.size === size));
+    });
+  }
+
+  var guardado = localStorage.getItem('teresita-tamano-texto') || 'md';
+  aplicarTamano(guardado);
+
+  botones.forEach(function (b) {
+    b.addEventListener('click', function () {
+      aplicarTamano(b.dataset.size);
+      localStorage.setItem('teresita-tamano-texto', b.dataset.size);
+    });
+  });
+})();
+
+
+/* =====================================================================
+   1C. PANEL DE ACCESIBILIDAD — abrir / cerrar
+   ===================================================================== */
+(function initPanelAccesibilidad() {
+  var toggle = document.getElementById('accesibilidad-toggle');
+  var panel  = document.getElementById('accesibilidad-panel');
+  if (!toggle || !panel) return;
+
+  function abrir() {
+    panel.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+  function cerrar() {
+    panel.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
+  toggle.addEventListener('click', function () {
+    if (panel.hidden) { abrir(); } else { cerrar(); }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !panel.hidden) {
+      cerrar();
+      toggle.focus();
+    }
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!panel.hidden && !panel.contains(e.target) && !toggle.contains(e.target)) {
+      cerrar();
+    }
   });
 })();
 
@@ -48,11 +115,9 @@
   }
 
   closeBtn.addEventListener('click', function () {
-    banner.style.transition = 'opacity 300ms ease, max-height 300ms ease';
-    banner.style.opacity    = '0';
-    banner.style.maxHeight  = '0';
-    banner.style.overflow   = 'hidden';
-    banner.style.padding    = '0';
+    /* La animación de cierre (opacidad/alto) vive en la clase .is-closing
+       definida en styles.css; aquí solo se conmuta la clase. */
+    banner.classList.add('is-closing');
     setTimeout(function () {
       banner.classList.add('hidden');
       localStorage.setItem('teresita-banner-dismissed', 'true');
@@ -72,22 +137,7 @@
   var searchResults    = document.getElementById('search-results');
   if (!tabsContainer || !contentContainer) return;
 
-  var ICONOS = {
-    'Abarrotes y Despensa':       '',
-    'Lácteos y Refrigerados':     '',
-    'Carnes y Embutidos':         '',
-    'Frutas y Verduras':          '',
-    'Bebidas':                    '',
-    'Snacks y Dulcería':          '',
-    'Panadería':                  '',
-    'Higiene y Farmacia':         '',
-    'Limpieza del Hogar':         '',
-    'Ferretería y Hogar':         '',
-    'Alimentos para Mascotas':    '',
-  };
-
   var todosLosProductos = [];
-  var catalogaData      = {};
 
   function toId(nombre) {
     return nombre.toLowerCase()
@@ -192,29 +242,19 @@
     return li;
   }
 
-  function renderCarrusel(catNombre, productos) {
-    contentContainer.innerHTML = '';
-    if (searchInput) searchInput.value = '';
-    if (searchResults) searchResults.innerHTML = '';
-
+  function crearCarruselConBotones(track) {
     var wrapper = document.createElement('div');
     wrapper.className = 'carrusel-wrapper';
 
     var btnPrev = document.createElement('button');
-    btnPrev.className = 'carrusel-btn carrusel-btn--prev';
+    btnPrev.className = 'carrusel-btn';
     btnPrev.innerHTML = '‹';
     btnPrev.setAttribute('aria-label', 'Desplazar izquierda');
 
     var btnNext = document.createElement('button');
-    btnNext.className = 'carrusel-btn carrusel-btn--next';
+    btnNext.className = 'carrusel-btn';
     btnNext.innerHTML = '›';
     btnNext.setAttribute('aria-label', 'Desplazar derecha');
-
-    var track = document.createElement('ul');
-    track.className = 'carrusel-track';
-    track.setAttribute('aria-label', 'Productos de ' + catNombre);
-
-    productos.forEach(function (p) { track.appendChild(crearTarjeta(p, null)); });
 
     var SCROLL = 304;
     btnPrev.addEventListener('click', function () { track.scrollBy({ left: -SCROLL, behavior: 'smooth' }); });
@@ -223,7 +263,20 @@
     wrapper.appendChild(btnPrev);
     wrapper.appendChild(track);
     wrapper.appendChild(btnNext);
-    contentContainer.appendChild(wrapper);
+    return wrapper;
+  }
+
+  function renderCarrusel(catNombre, productos) {
+    contentContainer.innerHTML = '';
+    if (searchInput) searchInput.value = '';
+    if (searchResults) searchResults.innerHTML = '';
+
+    var track = document.createElement('ul');
+    track.className = 'carrusel-track';
+    track.setAttribute('aria-label', 'Productos de ' + catNombre);
+    productos.forEach(function (p) { track.appendChild(crearTarjeta(p, null)); });
+
+    contentContainer.appendChild(crearCarruselConBotones(track));
   }
 
   function renderBusqueda(resultados, query) {
@@ -242,26 +295,12 @@
       h.className   = 'search-group-title';
       h.textContent = titulo + ' (' + items.length + ')';
       searchResults.appendChild(h);
+
       var track = document.createElement('ul');
       track.className = 'carrusel-track';
       items.forEach(function (r) { track.appendChild(crearTarjeta(r.producto, r.categoria)); });
-      var wrapper = document.createElement('div');
-      wrapper.className = 'carrusel-wrapper';
-      var btnP = document.createElement('button');
-      btnP.className = 'carrusel-btn carrusel-btn--prev';
-      btnP.innerHTML = '‹';
-      btnP.setAttribute('aria-label', 'Desplazar izquierda');
-      var btnN = document.createElement('button');
-      btnN.className = 'carrusel-btn carrusel-btn--next';
-      btnN.innerHTML = '›';
-      btnN.setAttribute('aria-label', 'Desplazar derecha');
-      var SCROLL = 304;
-      btnP.addEventListener('click', function () { track.scrollBy({ left: -SCROLL, behavior: 'smooth' }); });
-      btnN.addEventListener('click', function () { track.scrollBy({ left:  SCROLL, behavior: 'smooth' }); });
-      wrapper.appendChild(btnP);
-      wrapper.appendChild(track);
-      wrapper.appendChild(btnN);
-      searchResults.appendChild(wrapper);
+
+      searchResults.appendChild(crearCarruselConBotones(track));
     }
     renderGrupo('✅ Resultados para "' + query + '"', exactos);
     renderGrupo('🔍 Productos similares', similares);
@@ -294,8 +333,6 @@
   }
 
   function inicializarCatalogo(data) {
-    catalogaData = data;
-
     Object.keys(data).forEach(function (cat) {
       data[cat].forEach(function (p) {
         todosLosProductos.push({ producto: p, categoria: cat });
@@ -303,7 +340,7 @@
     });
 
     var categorias = Object.keys(data).sort().map(function (nombre) {
-      return { id: toId(nombre), nombre: nombre, icono: ICONOS[nombre] || '', productos: data[nombre] };
+      return { id: toId(nombre), nombre: nombre, productos: data[nombre] };
     });
 
     if (!categorias.length) return;
@@ -317,7 +354,7 @@
       btn.dataset.tab = cat.id;
       btn.setAttribute('role', 'tab');
       btn.setAttribute('aria-selected', 'false');
-      btn.innerHTML = '<span aria-hidden="true">' + cat.icono + '</span> ' + cat.nombre;
+      btn.textContent = cat.nombre;
       btn.addEventListener('click', function () {
         activarTab(cat.id);
         renderCarrusel(cat.nombre, cat.productos);
@@ -332,7 +369,7 @@
   }
 
   /* ── Mostrar indicador de carga mientras llega el JSON ── */
-  contentContainer.innerHTML = '<p style="padding:2rem;text-align:center;color:var(--color-texto-suave);">Cargando productos…</p>';
+  contentContainer.innerHTML = '<p class="catalogo-loading">Cargando productos…</p>';
 
   /* ── Cargar datos desde data/productos.json ── */
   fetch('js/productos.json')
@@ -357,10 +394,10 @@
       debounceTimer = setTimeout(function () {
         var q = searchInput.value.trim();
         if (q.length >= 2) {
-          contentContainer.style.display = 'none';
+          contentContainer.classList.add('is-hidden');
           buscar(q);
         } else {
-          contentContainer.style.display = '';
+          contentContainer.classList.remove('is-hidden');
           if (searchResults) searchResults.innerHTML = '';
         }
       }, 300);
@@ -368,7 +405,7 @@
     searchInput.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
         searchInput.value = '';
-        contentContainer.style.display = '';
+        contentContainer.classList.remove('is-hidden');
         if (searchResults) searchResults.innerHTML = '';
       }
     });
@@ -439,7 +476,7 @@
 
 
 /* =====================================================================
-   CATEGORÍAS POPULARES — click para saltar al tab correcto
+   7. CATEGORÍAS POPULARES — click para saltar al tab correcto
    ===================================================================== */
 (function initCatCards() {
   document.querySelectorAll('.cat-card[data-jump]').forEach(function(card) {
@@ -452,10 +489,12 @@
     });
   });
 })();
+
+
 /* =====================================================================
-   CARRUSEL DE GALERÍA
+   8. CARRUSEL DE GALERÍA
    ===================================================================== */
-(function() {
+(function initGaleriaCarrusel() {
   var track = document.getElementById('carruselTrack');
   var prevBtn = document.getElementById('carruselPrev');
   var nextBtn = document.getElementById('carruselNext');
