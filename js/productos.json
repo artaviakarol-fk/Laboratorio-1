@@ -128,7 +128,6 @@
 
   "Snacks y Dulcería": [
     { "nombre": "Cebollino Jacks 30G", "precio": 450, "subcategoria": "Snacks", "imagen": "img/Productos/cebollino.png" },
-    { "nombre": "Chocolate Milka Fresa", "precio": 1175, "subcategoria": "Confites Y Chocolates", "imagen": "img/Productos/chocolate-fresa.png" },
     { "nombre": "Gelatina Uva 80G", "precio": 450, "subcategoria": "Gelatinas", "imagen": "img/Productos/gelatina-uva.png" },
     { "nombre": "Halls Mora Azul", "precio": 350, "subcategoria": "Confites Y Chocolates", "imagen": "img/Productos/halls-mora-azul.png" },
     { "nombre": "Palomitas Act II Queso Chedar", "precio": 1100, "subcategoria": "Palomitas", "imagen": "img/Productos/palomitas-queso-chedar.png" },
