@@ -102,31 +102,6 @@
 
 
 /* =====================================================================
-   2. BANNER DE BIENVENIDA
-   ===================================================================== */
-(function initBanner() {
-  var banner   = document.getElementById('welcome-banner');
-  var closeBtn = document.getElementById('close-banner');
-  if (!banner || !closeBtn) return;
-
-  if (localStorage.getItem('teresita-banner-dismissed') === 'true') {
-    banner.classList.add('hidden');
-    return;
-  }
-
-  closeBtn.addEventListener('click', function () {
-    /* La animación de cierre (opacidad/alto) vive en la clase .is-closing
-       definida en styles.css; aquí solo se conmuta la clase. */
-    banner.classList.add('is-closing');
-    setTimeout(function () {
-      banner.classList.add('hidden');
-      localStorage.setItem('teresita-banner-dismissed', 'true');
-    }, 300);
-  });
-})();
-
-
-/* =====================================================================
    3 & 4. CATÁLOGO + BÚSQUEDA — carga desde data/productos.json
    ===================================================================== */
 (function initCatalogo() {
